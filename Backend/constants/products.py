@@ -1,8 +1,7 @@
 
 from schema.product import ProductBase
-
-product = {
-    1: ProductBase(
+products = [
+    ProductBase(
         id=1,
         code="P001",
         name="Product 1",
@@ -15,7 +14,7 @@ product = {
         brand="Brand X",
         location="Location A"
     ),
-    2: ProductBase(
+    ProductBase(
         id=2,
         code="P002",
         name="Product 2",
@@ -28,7 +27,7 @@ product = {
         brand="Brand Y",
         location="Location B"
     ),
-    3: ProductBase(
+    ProductBase(
         id=3,
         code="P003",
         name="Product 3",
@@ -41,7 +40,7 @@ product = {
         brand="Brand Z",
         location="Location C"
     ),
-    4: ProductBase(
+    ProductBase(
         id=4,
         code="P004",
         name="Product 4",
@@ -54,7 +53,7 @@ product = {
         brand="Brand W",
         location="Location D"
     ),
-    5: ProductBase(
+    ProductBase(
         id=5,
         code="P005",
         name="Product 5",
@@ -67,6 +66,13 @@ product = {
         brand="Brand V",
         location="Location E"
     ),
-    # Add more products as needed
-}
+    # Add more ProductBase instances if needed
+]
 
+
+# Example of how to use the products list
+# for product in products:
+#     print(f"Product ID: {product.id}, Name: {product.name}, Price: {product.price}")
+# This code defines a list of products using the ProductBase schema.
+# Each product has attributes like id, code, name, nickname, quantity, threshold,
+# description, price, category, brand, and location.
