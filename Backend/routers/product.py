@@ -24,7 +24,7 @@ product = {
     # Add more products as needed
 }
 
-@router.post("/product")
+@router.post("/")
 async def create_product():
     """
     Create a new product.
@@ -34,7 +34,7 @@ async def create_product():
     return {"message": "Product created successfully"}
 
 
-@router.get("/product/{product_id}", response_model=ProductBase)
+@router.get("/{product_id}", response_model=ProductBase)
 async def get_product(product_id: int,query: Optional[str] = None):
     """
     Get a product by its ID.
