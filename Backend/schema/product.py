@@ -19,17 +19,4 @@ class ProductBase(BaseModel):
     location: Optional[str]
 
 
-class SaleBase(BaseModel):
-    id: int
-    quantity: int
-    date: datetime
-    total_price: float
-    products: List[ProductBase]
-
-
-
-
-
-
-
 
