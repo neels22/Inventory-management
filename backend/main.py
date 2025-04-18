@@ -37,13 +37,12 @@ async def create_product(product: Product):
     return {"message": "Product created", "product": product}
 
 
+# this api can be use to get all products and also to get a specific product
 @app.get("/product/")
-async def get_product(product_id: str):
-    # Here you would typically retrieve the product from a database
-    for product in productarr:
-        if product["id"] == int(product_id):
-            return {"message": "Product retrieved", "product": product}
-    return {"message": "Product not found"}
-
-
-
+async def get_product(product_id: Optional[int] = None):
+    if product_id is not None:
+        for product in productarr:
+            if product["id"] == product_id:
+                return {"message": "Product retrieved", "product": product}
+        return {"message": "Product not found"}
+    return {"message": "All products retrieved", "products": productarr}
