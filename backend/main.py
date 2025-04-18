@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from schema.product import Product
-
+from typing import Optional
 
 # Allow CORS for all origins
 origins = [
@@ -37,12 +37,13 @@ async def create_product(product: Product):
     return {"message": "Product created", "product": product}
 
 
-# this api can be use to get all products and also to get a specific product
-@app.get("/product/")
-async def get_product(product_id: Optional[int] = None):
-    if product_id is not None:
-        for product in productarr:
-            if product["id"] == product_id:
-                return {"message": "Product retrieved", "product": product}
-        return {"message": "Product not found"}
+@app.get("/products/")
+async def get_all_products():
     return {"message": "All products retrieved", "products": productarr}
+
+@app.get("/product/{product_id}")
+async def get_product(product_id: int):
+    for product in productarr:
+        if product["id"] == product_id:
+            return {"message": "Product retrieved", "product": product}
+    return {"message": "Product not found"}
