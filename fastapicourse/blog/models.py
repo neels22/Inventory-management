@@ -1,7 +1,10 @@
 
 
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from .database import Base
+
+from sqlalchemy.orm import relationship
+
 
 # this is db structure or table structure
 
@@ -10,6 +13,9 @@ class BlogModel(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
     body = Column(String)
+
+    user_id = Column(Integer, ForeignKey("users.id"))
+    creator = relationship("UserModel", back_populates="blogs")
 
 
 
@@ -20,4 +26,6 @@ class UserModel(Base):
     email = Column(String)
     password = Column(String)
     created_at = Column(DateTime)
+
+    blogs = relationship("BlogModel", back_populates="creator")
 
