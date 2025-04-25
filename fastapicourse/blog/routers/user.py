@@ -17,13 +17,13 @@ from ..database import SessionLocal
 
 
 router = APIRouter(
-
+    prefix="/api",
     tags=["Users"]
 )
 
 
 
-@router.post("/user",status_code=status.HTTP_201_CREATED, tags=["Users"])
+@router.post("/user",status_code=status.HTTP_201_CREATED)
 def create_user(request:User, db:Session = Depends(get_db)):
     # Hash the password
     hashed_password = Hash.encrypt(request.password)
@@ -39,12 +39,12 @@ def create_user(request:User, db:Session = Depends(get_db)):
     return new_user
 
 
-@router.get("/user",status_code=status.HTTP_200_OK, tags=["Users"])
+@router.get("/user",status_code=status.HTTP_200_OK)
 def get_user(db:Session = Depends(get_db)):
     users = db.query(models.UserModel).all()
     return users
 
-@router.get("/user/{id}",status_code=status.HTTP_200_OK, response_model=showUser, tags=["Users"])
+@router.get("/user/{id}",status_code=status.HTTP_200_OK, response_model=showUser)
 def get_user(id:int, db:Session = Depends(get_db)):
     user = db.query(models.UserModel).filter(models.UserModel.id == id).first()
 
@@ -55,7 +55,7 @@ def get_user(id:int, db:Session = Depends(get_db)):
     return user
 
 
-@router.delete("/user/{id}",status_code=status.HTTP_204_NO_CONTENT, tags=["Users"])
+@router.delete("/user/{id}",status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(id:int, db:Session = Depends(get_db)):
     user = db.query(models.UserModel).filter(models.UserModel.id == id)
     if not user.first():
@@ -68,7 +68,7 @@ def delete_user(id:int, db:Session = Depends(get_db)):
 
 
 
-@router.put("/user/{id}",status_code=status.HTTP_202_ACCEPTED,response_model=showUser, tags=["Users"])
+@router.put("/user/{id}",status_code=status.HTTP_202_ACCEPTED,response_model=showUser)
 def update_user(id:int, request:User, db:Session = Depends(get_db)):
     user = db.query(models.UserModel).filter(models.UserModel.id == id)
     if not user.first():

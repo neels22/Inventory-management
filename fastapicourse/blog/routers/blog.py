@@ -14,13 +14,13 @@ from ..database import SessionLocal
 
 
 router = APIRouter(
-
+    prefix="/api",
     tags=["Blogs"]
 )
 
 
 
-@router.get("/blog/",response_model=list[showBlog], status_code=status.HTTP_200_OK, tags=["Blogs"])
+@router.get("/blog/",response_model=list[showBlog], status_code=status.HTTP_200_OK)
 def get_blogs(db:Session = Depends(get_db)):
     blogs = db.query(models.BlogModel).all()
     return blogs
@@ -30,7 +30,7 @@ def get_blogs(db:Session = Depends(get_db)):
 
 
 
-@router.post("/blog",status_code=status.HTTP_201_CREATED, tags=["Blogs"])
+@router.post("/blog",status_code=status.HTTP_201_CREATED)
 def create_blog(request:Blog,db:Session = Depends(get_db)):
     new_blog = models.BlogModel(title=request.title, body=request.body, user_id=1)
     db.add(new_blog)
@@ -38,7 +38,7 @@ def create_blog(request:Blog,db:Session = Depends(get_db)):
     db.refresh(new_blog)
     return new_blog
 
-@router.delete("/blog/{id}",status_code=status.HTTP_204_NO_CONTENT , tags=["Blogs"])
+@router.delete("/blog/{id}",status_code=status.HTTP_204_NO_CONTENT )
 def delete_blog(id:int, db:Session = Depends(get_db)):
     blog = db.query(models.BlogModel).filter(models.BlogModel.id == id)
     if not blog.first():
@@ -50,7 +50,7 @@ def delete_blog(id:int, db:Session = Depends(get_db)):
     return {"message": "Blog deleted successfully"}
 
 
-@router.put("/blog/{id}",status_code=status.HTTP_202_ACCEPTED , response_model=showBlog, tags=["Blogs"])
+@router.put("/blog/{id}",status_code=status.HTTP_202_ACCEPTED , response_model=showBlog)
 def update_blog(id:int, request:Blog, db:Session = Depends(get_db)):
     blog = db.query(models.BlogModel).filter(models.BlogModel.id == id)
     if not blog.first():
@@ -68,15 +68,7 @@ def update_blog(id:int, request:Blog, db:Session = Depends(get_db)):
 
 
 
-
-
-
-# @router.get("/blog/",response_model=list[showBlog], status_code=status.HTTP_200_OK, tags=["Blogs"])
-# def get_blogs(db:Session = Depends(get_db)):
-#     blogs = db.query(models.BlogModel).all()
-#     return blogs
-
-@router.get("/blog/{id}",status_code=status.HTTP_200_OK, response_model=showBlog, tags=["Blogs"])
+@router.get("/blog/{id}",status_code=status.HTTP_200_OK, response_model=showBlog)
 def get_blog(id:int, db:Session = Depends(get_db)):
     blog = db.query(models.BlogModel).filter(models.BlogModel.id == id).first()
 
