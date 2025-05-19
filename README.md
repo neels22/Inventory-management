@@ -28,4 +28,8 @@ api list
 
 
 - sale
-    - 
+    - put/add product to sale
+    - delete product from the sale
+    - create/post new sale
+    - get the sale by its date or name
+    
