@@ -1,12 +1,11 @@
-
-
-
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import Optional
-from datetime import datetime
-from bson import ObjectId
 
 class Product(BaseModel):
+    id: Optional[int] = None
     name: str
     price: float
-    description: str = None
+    description: Optional[str] = None
+
+    class Config:
+        from_attributes = True

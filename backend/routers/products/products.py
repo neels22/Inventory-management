@@ -1,11 +1,10 @@
-
-
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from .. import schemas
-from ..database import get_db
+from ...schema.product import Product
+from ...database import get_db
+from ...models.models import ProductModel, SaleModel
 
 
 router = APIRouter(
@@ -14,21 +13,21 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=List[schemas.Product], status_code=status.HTTP_200_OK)
+@router.get("/", response_model=List[Product], status_code=status.HTTP_200_OK)
 def get_all_products(db: Session = Depends(get_db)):
-    return db.query(models.Product).all()
+    return db.query(ProductModel).all()
 
-@router.get("/{product_id}", response_model=schemas.Product, status_code=status.HTTP_200_OK)
+@router.get("/{product_id}", response_model=Product, status_code=status.HTTP_200_OK)
 def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
-    product = db.query(models.Product).filter(models.Product.id == product_id).first()
+    product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
     if not product:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
     return product
 
 
-@router.post("/", response_model=schemas.Product, status_code=status.HTTP_201_CREATED)
-def create_product(product: schemas.Product, db: Session = Depends(get_db)):
-    new_product = models.Product(name=product.name, price=product.price, description=product.description)
+@router.post("/", response_model=Product, status_code=status.HTTP_201_CREATED)
+def create_product(product: Product, db: Session = Depends(get_db)):
+    new_product = ProductModel(name=product.name, price=product.price, description=product.description)
     db.add(new_product)
     db.commit()
     db.refresh(new_product)
