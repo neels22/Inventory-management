@@ -25,4 +25,8 @@ def get_db():
     finally:
         db.close()
 
+# Create all tables
+from models.models import User, ProductModel, SaleModel
+Base.metadata.create_all(bind=engine)
+
 # This code is used to create a database connection using SQLAlchemy with PostgreSQL. It defines the database URL from environment variables, creates an engine, and sets up a session local for database interactions. The `get_db` function is a generator that provides a session to interact with the database and ensures that the session is closed after use.

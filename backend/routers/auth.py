@@ -37,7 +37,8 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_user)
     
-    return db_user
+    # Convert SQLAlchemy model to Pydantic model
+    return UserResponse.from_orm(db_user)
 
 @router.post("/login", response_model=Token)
 async def login(
