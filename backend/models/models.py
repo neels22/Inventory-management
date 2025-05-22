@@ -48,8 +48,3 @@ class ProductModel(Base):
     description = Column(String, default="")
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    sales = relationship(
-        "SaleModel",
-        secondary='sale_product_association',
-        back_populates="products"
-    )
