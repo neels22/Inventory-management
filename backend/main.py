@@ -1,10 +1,10 @@
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from schema.product import Product
+from schema.product import ProductCreateSchema
 from typing import Optional
 
 from routers.products import products
+from routers.inventorysales import sales
 # Allow CORS for all origins
 origins = [
     "http://localhost:3000",
@@ -20,6 +20,7 @@ app.add_middleware(
 )
 
 app.include_router(products.router)
+app.include_router(sales.router)
 
 
 @app.get("/")

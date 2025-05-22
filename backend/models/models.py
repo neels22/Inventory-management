@@ -1,12 +1,11 @@
-
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
-from ..db.dbconnection import Base
+from db.dbconnection import Base
 from sqlalchemy import DateTime
 from datetime import datetime
 from sqlalchemy import Table, Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-from ..db.dbconnection import Base
+from db.dbconnection import Base
 
 # Association table
 sale_product_association = Table(
