@@ -3,8 +3,9 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from typing import Annotated
 
-from db.database import get_db
-from models.user import User
+from db.dbconnection import get_db
+from models.models import User
+from schema.auth_schema import UserResponse
 from utils.auth_utils import verify_token
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
@@ -12,7 +13,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     db: Annotated[Session, Depends(get_db)]
-) -> User:
+) -> UserResponse:
     """Get the current authenticated user."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -29,11 +30,11 @@ async def get_current_user(
     if user is None:
         raise credentials_exception
     
-    return user
+    return UserResponse.model_validate(user)
 
 async def get_current_active_user(
-    current_user: Annotated[User, Depends(get_current_user)]
-) -> User:
+    current_user: Annotated[UserResponse, Depends(get_current_user)]
+) -> UserResponse:
     """Get the current active user."""
     if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
