@@ -4,6 +4,8 @@ from typing import List, Optional
 from app.core.database import get_db
 from app.crud import product as crud
 from app.schemas.product import Product, ProductCreate, ProductUpdate
+from app.auth.dependencies import get_current_user
+from app.auth.models import User
 
 router = APIRouter()
 
@@ -19,7 +21,11 @@ def read_products(
     return products
 
 @router.post("/", response_model=Product)
-def create_product(product: ProductCreate, db: Session = Depends(get_db)):
+def create_product(
+    product: ProductCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     db_product = crud.get_product_by_barcode(db, barcode=product.barcode)
     if db_product:
         raise HTTPException(status_code=400, detail="Barcode already registered")
@@ -36,7 +42,8 @@ def read_product(product_id: int, db: Session = Depends(get_db)):
 def update_product(
     product_id: int,
     product: ProductUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     db_product = crud.update_product(db, product_id=product_id, product=product)
     if db_product is None:
@@ -44,7 +51,11 @@ def update_product(
     return db_product
 
 @router.delete("/{product_id}")
-def delete_product(product_id: int, db: Session = Depends(get_db)):
+def delete_product(
+    product_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     success = crud.delete_product(db, product_id=product_id)
     if not success:
         raise HTTPException(status_code=404, detail="Product not found")

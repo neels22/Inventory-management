@@ -5,6 +5,8 @@ from datetime import datetime
 from app.core.database import get_db
 from app.crud import sale as crud
 from app.schemas.sale import Sale, SaleCreate, SaleUpdate
+from app.auth.dependencies import get_current_user
+from app.auth.models import User
 
 router = APIRouter()
 
@@ -26,7 +28,11 @@ def read_sales(
     return sales
 
 @router.post("/", response_model=Sale)
-def create_sale(sale: SaleCreate, db: Session = Depends(get_db)):
+def create_sale(
+    sale: SaleCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     try:
         return crud.create_sale(db=db, sale=sale)
     except ValueError as e:
@@ -43,7 +49,8 @@ def read_sale(sale_id: int, db: Session = Depends(get_db)):
 def update_sale(
     sale_id: int,
     sale: SaleUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     try:
         db_sale = crud.update_sale(db, sale_id=sale_id, sale=sale)
@@ -54,7 +61,11 @@ def update_sale(
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.delete("/{sale_id}")
-def delete_sale(sale_id: int, db: Session = Depends(get_db)):
+def delete_sale(
+    sale_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     success = crud.delete_sale(db, sale_id=sale_id)
     if not success:
         raise HTTPException(status_code=404, detail="Sale not found")
