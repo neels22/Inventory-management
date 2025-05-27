@@ -13,6 +13,7 @@ class SaleProduct(SaleProductBase):
     id: int
     sale_id: int
     total: float
+    product_name: Optional[str] = None  # Response-only field
 
     class Config:
         from_attributes = True

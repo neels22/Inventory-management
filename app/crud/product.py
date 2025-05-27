@@ -37,9 +37,12 @@ def update_product(
 ) -> Optional[Product]:
     db_product = get_product(db, product_id)
     if db_product:
-        update_data = product.model_dump(exclude_unset=True)
+        update_data = product.model_dump(exclude_unset=True, exclude_none=True)
+        
         for field, value in update_data.items():
-            setattr(db_product, field, value)
+            if value is not None:
+                setattr(db_product, field, value)
+        
         db.commit()
         db.refresh(db_product)
     return db_product
