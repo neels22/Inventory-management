@@ -7,7 +7,6 @@ class ProductBase(BaseModel):
     barcode: str
     quantity: int
     price: float
-    discount: Optional[float] = 0.0
     threshold: Optional[int] = 10
     location: str
     category: str
@@ -22,7 +21,6 @@ class ProductUpdate(BaseModel):
     barcode: Optional[str] = None
     quantity: Optional[int] = None
     price: Optional[float] = None
-    discount: Optional[float] = None
     threshold: Optional[int] = None
     location: Optional[str] = None
     category: Optional[str] = None

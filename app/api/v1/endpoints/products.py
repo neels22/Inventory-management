@@ -6,6 +6,16 @@ from app.crud import product as crud
 from app.schemas.product import Product, ProductCreate, ProductUpdate
 from app.auth.dependencies import get_current_user
 from app.auth.models import User
+from pydantic import BaseModel
+from app.models.product import Product as ProductModel
+
+class ProductSearch(BaseModel):
+    name: str
+    price: float
+    quantity: int
+
+    class Config:
+        from_attributes = True
 
 router = APIRouter()
 
@@ -63,4 +73,20 @@ def delete_product(
 
 @router.get("/low-stock/", response_model=List[Product])
 def read_low_stock_products(db: Session = Depends(get_db)):
-    return crud.get_low_stock_products(db) 
+    return crud.get_low_stock_products(db)
+
+@router.get("/search/", response_model=List[Product])
+def search_products(
+    q: Optional[str] = Query(None, description="Search query for product name, short name, barcode, or category"),
+    db: Session = Depends(get_db)
+):
+    if not q:
+        return []
+    
+    search_term = f"%{q}%"
+    return db.query(ProductModel).filter(
+        (ProductModel.name.ilike(search_term)) |
+        (ProductModel.shortname.ilike(search_term)) |
+        (ProductModel.barcode.ilike(search_term)) |
+        (ProductModel.category.ilike(search_term))
+    ).all() 

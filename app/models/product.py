@@ -11,7 +11,6 @@ class Product(Base):
     barcode = Column(String, unique=True, index=True)
     quantity = Column(Integer, default=0)
     price = Column(Float)
-    discount = Column(Float, default=0.0)
     threshold = Column(Integer, default=10)
     location = Column(String)
     category = Column(String, index=True)
